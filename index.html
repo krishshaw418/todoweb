@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mytodolist</title>
+</head>
+<body>
+
+    <label for="Title">Title</label>
+    <input type="text" id="Title"><br><br>
+    <label for="Description">Desctiption</label>
+    <input type="text" id="Description"><br><br>
+    <label for="ID">Enter Id</label>
+    <input type="text" id="ID"><br><br>
+    <button onclick="get()">Get All Todos</button><br><br>
+    <button onclick="getSpecific()">Get A Specific Todo</button><br><br>
+    <button onclick="post()">Post New Todo</button><br><br>
+    <button onclick="del()">Delete An Old Todo</button><br><br>
+    <button onclick="update()">Update An Old Todo</button>
+<script>
+        function get(){
+            fetch('http://localhost:4000/',{
+            method:"GET"
+        })
+        .then((data)=>{
+            data.json().then((todo)=>{
+                console.log(todo);
+            })
+        });
+        }
+
+        function getSpecific(){
+            const ID = document.getElementById('ID').value;
+            fetch(`http://localhost:4000/todohard/${ID}`,{
+                method:"GET"
+            })
+            .then((resp)=>{
+                resp.json()
+                .then((data)=>{
+                    console.log(data);
+                })
+            })
+        }
+
+        function post(){
+            const title = document.getElementById('Title').value;
+            const description = document.getElementById('Description').value;
+            fetch('http://localhost:4000/todohard',{
+                method:"POST",
+                headers:{
+                    'Content-Type' : 'application/json'
+                },
+                body:JSON.stringify({title,description})
+            })
+            .then((resp)=>{
+                resp.json()
+                .then((data)=>{
+                    console.log(`New Todo Added`);
+                })
+            })
+        }
+
+        function del(){
+            const Identity = document.getElementById('ID').value;
+            fetch(`http://localhost:4000/todohard/${Identity}`,{
+                method:"DELETE",
+                headers:{
+                    'Upgrade': 'websocket'
+                }
+            })
+            .then((resp)=>{
+                resp.json()
+                .then((data)=>{
+                    console.log(`Todo Deleted`);
+                })
+            })
+        }
+
+        function update(){
+            const title = document.getElementById('Title').value;
+            const description = document.getElementById('Description').value;
+            const Identity = document.getElementById('ID').value;
+            fetch(`http://localhost:4000/todohard/${Identity}`,{
+                method:"PUT",
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({title,description})
+            })
+            .then((resp)=>{
+                resp.json()
+                .then((data)=>{
+                    console.log(`Updated Sucessfully!`);
+                })
+            })
+        }
+</script>
+</body>
+</html>
